@@ -16,7 +16,7 @@ public class Program {
 	}
 
 	static string FormatByteSize(long byteSize) {
-		// String list of ends to the size 
+		// String list of ends to the size
 		string[] ends = { "Bytes", "kB", "mB", "gB", "tB", "pB" };
 		int counter = 0;
 		// Used float instead of Decimal here cause method only returns 2 siginificant digits
