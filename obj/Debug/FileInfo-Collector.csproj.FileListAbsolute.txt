@@ -1,0 +1,7 @@
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\bin\Debug\FileInfo-Collector.exe.config
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\bin\Debug\FileInfo-Collector.exe
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\bin\Debug\FileInfo-Collector.pdb
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\obj\Debug\FileInfo-Collector.csprojAssemblyReference.cache
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\obj\Debug\FileInfo-Collector.csproj.CoreCompileInputs.cache
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\obj\Debug\FileInfo-Collector.exe
+C:\Users\Saurav\Documents\GitHub\FileInfo-Collector\obj\Debug\FileInfo-Collector.pdb
