@@ -26,7 +26,7 @@ public class Program {
 		// Loop keep dividing by 1000 until you can't
 		// counter keeps track of which end we are at
 		while (number / 1000 >= 1) {
-			number = number / 1000;
+			number /= 1000;
 			counter++;
 		}
 		// Put it together and return, the 0:n2 part will give 2 significant digits
