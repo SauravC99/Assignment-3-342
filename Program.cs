@@ -63,9 +63,7 @@ public class Program
 
     public static void Main(string[] args)
     {
-        // TODO: Take two command line arguments. The first value is the path
-        // of the input folder and the second the path of the HTML report
-        // output file. Call the functions above to create the report file.
+        // TODO: Call the functions above to create the report file.
 
         // Test if the two command line arguments are supplied.
         if (args.Length == 0)
@@ -75,6 +73,16 @@ public class Program
             Console.WriteLine("second argument should be the path of the HTML report output file.");
 
             return;  // exit program
+        }
+        else if (args.Length == 2)
+        {
+            // Take two command line arguments.
+            string inputFolderPath = args[0];
+            string reportOutputPath = args[1];
+
+            // Display the two values entered by the user.
+            Console.WriteLine($"Input folder path: {args[0]}");
+            Console.WriteLine($"HTML report output file path: {args[1]}");
         }
     }
 
