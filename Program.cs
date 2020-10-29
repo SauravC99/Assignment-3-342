@@ -66,6 +66,16 @@ public class Program
         // TODO: Take two command line arguments. The first value is the path
         // of the input folder and the second the path of the HTML report
         // output file. Call the functions above to create the report file.
+
+        // Test if the two command line arguments are supplied.
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Please enter two command line arguments.");
+            Console.WriteLine("The first argument should be the path of the input folder and the");
+            Console.WriteLine("second argument should be the path of the HTML report output file.");
+
+            return;  // exit program
+        }
     }
 
 }

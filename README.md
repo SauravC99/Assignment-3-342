@@ -1,10 +1,10 @@
-# Lab Assignment 3
+# File Information Collector
 
-## Overview
+## Objective
 Use C# and LINQ to iterate files, to query, group and order data, and to create an XML document based on that data.
 
 
-## Implementation
+## Console Application
 - Create a C# console application.  
 This application has two command line arguments: **(1)** A path to a folder and **(2)** a name for a HTML report output file. The application collects all files with the same extension (converted to lower case) and determines for each extension, i.e. file type, the number of files and the total size of all files of this type.
 
@@ -30,5 +30,5 @@ This application has two command line arguments: **(1)** A path to a folder and 
 - **Do not** use lists or arrays to store intermediate data. Instead use iterators to process the sequences of data element without storing it all.
 
 
-## Testing The Code
+## Testing
 Demonstrate that the console application works correctly by creating a report file from some folder on your machine.
