@@ -21,7 +21,12 @@ public class Program
         // Use System.IO.Directory
         if (Directory.Exists(path))
         {
+            var fileEntries = Directory.EnumerateFileSystemEntries(path);
             // Use the generator pattern yield to implement the iterator.
+            foreach (string fileName in fileEntries)
+                yield return fileName;
+
+            // TODO: enumerate sub-folder files
         }
         else
         {
