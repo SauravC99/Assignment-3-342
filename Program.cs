@@ -16,10 +16,17 @@ public class Program
     {
         // TODO: Enumerate all files in a given folder recursively including
         // the entire sub-folder hierarchy.
+        Console.WriteLine($"Path given to EnumerateFilesRecursively: {path}");
 
         // Use System.IO.Directory
-
-        // Use the generator pattern yield to implement the iterator.
+        if (Directory.Exists(path))
+        {
+            // Use the generator pattern yield to implement the iterator.
+        }
+        else
+        {
+            Console.WriteLine($"{path} is not a valid folder directory.");
+        }
     }
 
     static string FormatByteSize(long byteSize)
@@ -86,7 +93,9 @@ public class Program
 
             // Call the function that enumerates the files within the folder.
             var folderFiles = EnumerateFilesRecursively(inputFolderPath);
-            
+            foreach (var line in folderFiles)
+                Console.WriteLine(line); // test the values returned from EnumerateFilesRecursively
+
             // TODO: call function to write the report
 
             return 0; // End of program.
