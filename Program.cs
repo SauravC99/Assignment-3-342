@@ -15,7 +15,7 @@ public class Program
     static IEnumerable<string> EnumerateFilesRecursively(string path)
     {
         // TODO: Enumerate all files in a given folder recursively including
-        // the entire sub-folder hierarchi.
+        // the entire sub-folder hierarchy.
 
         // Use System.IO.Directory
 
@@ -61,7 +61,7 @@ public class Program
         // construct the XML document.
     }
 
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
         // TODO: Call the functions above to create the report file.
 
@@ -72,7 +72,7 @@ public class Program
             Console.WriteLine("The first argument should be the path of the input folder and the");
             Console.WriteLine("second argument should be the path of the HTML report output file.");
 
-            return;  // exit program
+            return 1;  // Exit program.
         }
         else if (args.Length == 2)
         {
@@ -83,7 +83,18 @@ public class Program
             // Display the two values entered by the user.
             Console.WriteLine($"Input folder path: {args[0]}");
             Console.WriteLine($"HTML report output file path: {args[1]}");
+
+            // Call the function that enumerates the files within the folder.
+            var folderFiles = EnumerateFilesRecursively(inputFolderPath);
+            
+            // TODO: call function to write the report
+
+            return 0; // End of program.
         }
+
+        Console.WriteLine("Invalid number of arguments given.");
+        Console.WriteLine("More than two arguments were given.");
+        return 1; // Exit program.
     }
 
 }
