@@ -98,11 +98,17 @@ public class Program
 
         // Take two command line arguments.
         string inputFolderPath = @"";
-        //string reportOutputPath = args[1];
+        string reportOutputPath = @"";
+
+        Console.Write("The first argument should be the path of the input folder: ");
+        inputFolderPath = Console.ReadLine();
+        Console.Write("The second argument should be the path of the HTML report output file: ");
+        reportOutputPath = Console.ReadLine();
+
 
         // Display the two values entered by the user.
         Console.WriteLine($"Input folder path: {inputFolderPath}");
-        //Console.WriteLine($"HTML report output file path: {args[1]}");
+        Console.WriteLine($"HTML report output file path: {reportOutputPath}");
 
         // Call the function that enumerates the files within the folder.
         try {
