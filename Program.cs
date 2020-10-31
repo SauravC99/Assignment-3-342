@@ -16,21 +16,27 @@ public class Program
     {
         // TODO: Enumerate all files in a given folder recursively including
         // the entire sub-folder hierarchy.
-        Console.WriteLine($"Path given to EnumerateFilesRecursively: {path}");
-
-        // Use System.IO.Directory
-        if (Directory.Exists(path))
+        try
         {
-            var fileEntries = Directory.EnumerateFileSystemEntries(path);
-            // Use the generator pattern yield to implement the iterator.
-            foreach (string fileName in fileEntries)
-                yield return fileName;
+            Console.WriteLine($"Path given: {path}");
 
-            // TODO: enumerate sub-folder files
+            // Use System.IO.Directory
+            if (Directory.Exists(path))
+            {
+                var fileEntries = Directory.EnumerateFileSystemEntries(path);
+                // Use the generator pattern yield to implement the iterator.
+                foreach (string fileName in fileEntries)
+                {
+                    EnumerateFilesRecursively(fileName);
+                }
+
+                // TODO: enumerate sub-folder files
+            }
+            return null;
         }
-        else
+        catch 
         {
-            Console.WriteLine($"{path} is not a valid folder directory.");
+            throw;
         }
     }
 
@@ -71,6 +77,7 @@ public class Program
 
         // Use the System.Xml.Linq.XElement constructor to functionally
         // construct the XML document.
+        return null;
     }
 
     public static int Main(string[] args)
@@ -78,6 +85,7 @@ public class Program
         // TODO: Call the functions above to create the report file.
 
         // Test if the two command line arguments are supplied.
+        /*
         if (args.Length == 0)
         {
             Console.WriteLine("Please enter two command line arguments.");
@@ -86,29 +94,30 @@ public class Program
 
             return 1;  // Exit program.
         }
-        else if (args.Length == 2)
-        {
-            // Take two command line arguments.
-            string inputFolderPath = args[0];
-            string reportOutputPath = args[1];
+        */
 
-            // Display the two values entered by the user.
-            Console.WriteLine($"Input folder path: {args[0]}");
-            Console.WriteLine($"HTML report output file path: {args[1]}");
+        // Take two command line arguments.
+        string inputFolderPath = @"";
+        //string reportOutputPath = args[1];
 
-            // Call the function that enumerates the files within the folder.
+        // Display the two values entered by the user.
+        Console.WriteLine($"Input folder path: {inputFolderPath}");
+        //Console.WriteLine($"HTML report output file path: {args[1]}");
+
+        // Call the function that enumerates the files within the folder.
+        try {
             var folderFiles = EnumerateFilesRecursively(inputFolderPath);
-            foreach (var line in folderFiles)
+            foreach (var line in folderFiles){
                 Console.WriteLine(line); // test the values returned from EnumerateFilesRecursively
-
-            // TODO: call function to write the report
-
-            return 0; // End of program.
+            }
+        }
+        catch(Exception e) {
+            //Console.WriteLine(e.Message);
         }
 
-        Console.WriteLine("Invalid number of arguments given.");
-        Console.WriteLine("More than two arguments were given.");
-        return 1; // Exit program.
+        // TODO: call function to write the report
+
+        return 0; // End of program.
     }
 
 }
