@@ -98,11 +98,9 @@ public class Program
 
         // Take two command line arguments.
         string inputFolderPath = "C:\\Users\\steve\\Desktop\\CECS Courses\\CECS 342";
-        //string reportOutputPath = args[1];
 
         // Display the two values entered by the user.
         Console.WriteLine($"Input folder path: {inputFolderPath}");
-        //Console.WriteLine($"HTML report output file path: {args[1]}");
 
         // Call the function that enumerates the files within the folder.
         var folderFiles = EnumerateFilesRecursively(inputFolderPath);
