@@ -14,29 +14,29 @@ public class Program
 {
     static IEnumerable<string> EnumerateFilesRecursively(string path)
     {
-        // TODO: Enumerate all files in a given folder recursively including
-        // the entire sub-folder hierarchy.
-        try
-        {
-            Console.WriteLine($"Path given: {path}");
 
-            // Use System.IO.Directory
-            if (Directory.Exists(path))
+        var fileEntries = Directory.EnumerateFileSystemEntries(path);
+        // Use the generator pattern yield to implement the iterator.
+        foreach (string fileName in fileEntries)
+        {
+            // checks if the current "file" is actually another embedded directory
+            if (Directory.Exists(fileName))
             {
-                var fileEntries = Directory.EnumerateFileSystemEntries(path);
-                // Use the generator pattern yield to implement the iterator.
-                foreach (string fileName in fileEntries)
-                {
-                    EnumerateFilesRecursively(fileName);
-                }
 
-                // TODO: enumerate sub-folder files
+                // if it is a subdirectory, we will loop through the 
+                // recursively returning strings and return those to
+                // allow them to be outputted correctly
+                foreach (string subFiles in EnumerateFilesRecursively(fileName))
+                {
+                    yield return subFiles;
+                }
             }
-            return null;
-        }
-        catch 
-        {
-            throw;
+
+            // if it is a normal file, we will simply call yeild return on it
+            else
+            {
+                yield return fileName;
+            }
         }
     }
 
@@ -97,7 +97,7 @@ public class Program
         */
 
         // Take two command line arguments.
-        string inputFolderPath = @"";
+        string inputFolderPath = "C:\\Users\\steve\\Desktop\\CECS Courses\\CECS 342";
         //string reportOutputPath = args[1];
 
         // Display the two values entered by the user.
@@ -105,14 +105,9 @@ public class Program
         //Console.WriteLine($"HTML report output file path: {args[1]}");
 
         // Call the function that enumerates the files within the folder.
-        try {
-            var folderFiles = EnumerateFilesRecursively(inputFolderPath);
-            foreach (var line in folderFiles){
-                Console.WriteLine(line); // test the values returned from EnumerateFilesRecursively
-            }
-        }
-        catch(Exception e) {
-            //Console.WriteLine(e.Message);
+        var folderFiles = EnumerateFilesRecursively(inputFolderPath);
+        foreach (var line in folderFiles){
+            Console.WriteLine(line); // test the values returned from EnumerateFilesRecursively
         }
 
         // TODO: call function to write the report
