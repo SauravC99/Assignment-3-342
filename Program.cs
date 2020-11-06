@@ -105,7 +105,7 @@ public class Program
         // Call the function that enumerates the files within the folder.
         var folderFiles = EnumerateFilesRecursively(inputFolderPath);
         foreach (var line in folderFiles){
-            Console.WriteLine(line); // test the values returned from EnumerateFilesRecursively
+            Console.WriteLine($"File: {line} size: {FormatByteSize(new FileInfo(line).Length)}"); // test the values returned from EnumerateFilesRecursively
         }
 
         // TODO: call function to write the report
