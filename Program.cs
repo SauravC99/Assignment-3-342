@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.Xml.Linq;
+using System.Data;
 
 /// <summary>
 /// Summary description for Class1
@@ -68,8 +69,50 @@ public class Program
         // size of all files with this type, respectively.
 
         // Use the System.IO.FileInfo to get the size of a file with a given path.
-
+        DataTable dt = new DataTable();
+        DataColumn dc1 = new DataColumn();
+        dc1.DataType = System.Type.GetType("System.String");
+        dc1.ColumnName = "Type";
+        dt.Columns.Add(dc1);
+        DataColumn dc2 = new DataColumn();
+        dc2.DataType = System.Type.GetType("System.Int32");
+        dc2.ColumnName = "Count";
+        dt.Columns.Add(dc2);
+        DataColumn dc3 = new DataColumn();
+        dc3.DataType = System.Type.GetType("System.Int64");
+        dc3.ColumnName = "Size";
+        dt.Columns.Add(dc3);
+        foreach (var v in files)
+        {
+            var f = new FileInfo(v);
+            string type = Path.GetExtension(f.ToString());
+            bool found = false;
+            foreach (DataRow d in dt.Rows)
+            {
+                if (d["Type"].Equals(type))
+                {
+                    d["Count"] = (int)d["Count"] + 1;
+                    d["Size"] = (long)d["Size"] + f.Length;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                DataRow dr = dt.NewRow();
+                dr["Type"] = type;
+                dr["Count"] = 1;
+                dr["Size"] = f.Length;
+                dt.Rows.Add(dr);
+            }
+        }
         // Sort the table by the byte size value of the "Size" column in descending order.
+        dt.DefaultView.Sort = "Size desc";
+        for (int i = 0; i < dt.Rows.Count; i++)
+        {
+            Console.WriteLine("Type: {0:G}, Count: {1:D}, Size:{2:D}", dt.Rows[i]["Type"], dt.Rows[i]["Count"], dt.Rows[i]["Size"]);
+        }
+
 
         // Use FormatByteSize to formart the value printed in the "Size" column.
 
@@ -77,7 +120,6 @@ public class Program
 
         // Use the System.Xml.Linq.XElement constructor to functionally
         // construct the XML document.
-
         return null;
     }
 
@@ -98,17 +140,18 @@ public class Program
         */
 
         // Take two command line arguments.
-        string inputFolderPath = "C:\\Users\\steve\\Desktop\\CECS Courses\\CECS 342";
-
+        //string inputFolderPath = "C:\\Users\\steve\\Desktop\\CECS Courses\\CECS 342";
+        string inputFolderPath = "C:\\LeetcodeProblems";
         // Display the two values entered by the user.
         Console.WriteLine($"Input folder path: {inputFolderPath}");
 
         // Call the function that enumerates the files within the folder.
         var folderFiles = EnumerateFilesRecursively(inputFolderPath);
-        foreach (var line in folderFiles){
+        foreach (var line in folderFiles)
+        {
             Console.WriteLine($"File: {line} size: {FormatByteSize(new FileInfo(line).Length)}"); // test the values returned from EnumerateFilesRecursively
         }
-
+        CreateReport(folderFiles);
         // TODO: call function to write the report
 
         return 0; // End of program.
