@@ -36,22 +36,25 @@ namespace FileInfo_Collector
 
         static string FormatByteSize(long byteSize)
         {
-            // String list of ends to the size
-            string[] ends = { "Bytes", "kB", "mB", "gB", "tB", "pB" };
-            int counter = 0;
-            // Used float instead of Decimal here cause method only returns 2 siginificant digits
-            // (Decimal has a higher precision than float)
-            float number = (float)byteSize;
+            // String list of byte size units after the numerical value.
+            // Note: 1kB = 1000B
+            string[] byteSizeNames = {"Bytes", "kB", "MB", "GB", "TB", "PB", "EB", "AB"};
+            int index = 0;
 
-            // Loop keep dividing by 1000 until you can't
-            // counter keeps track of which end we are at
-            while (number / 1000 >= 1)
+            // Used float instead of Decimal because the method only requires 2 siginificant digits.
+            // (Decimal has a higher precision than float).
+            float numberValue = (float)byteSize;
+
+            // Loop to keep dividing by 1000 while numerical value is >= 1.
+            // The index keeps track of which byte size name we will need.
+            while (numberValue / 1000 >= 1)
             {
-                number /= 1000;
-                counter++;
+                numberValue /= 1000;
+                index++;
             }
-            // Put it together and return, the 0:n2 part will give 2 significant digits
-            return string.Format("{0:n2}{1}", number, ends[counter]);
+
+            // Parse the result as a string, the 0:n2 part will give 2 significant digits.
+            return string.Format("{0:n2}{1}", numberValue, byteSizeNames[index]);
         }
 
         static XDocument CreateReport(IEnumerable<string> files)
