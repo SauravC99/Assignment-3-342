@@ -11,25 +11,24 @@ namespace FileInfo_Collector
         static IEnumerable<string> EnumerateFilesRecursively(string path)
         {
             var fileEntries = Directory.EnumerateFileSystemEntries(path);
-            // Use the generator pattern yield to implement the iterator.
+            
+            // Iterate through all the files in the given folder 
+            // and the entire sub-folder hierarchy.
             foreach (string fileName in fileEntries)
             {
-                // checks if the current "file" is actually another embedded directory
+                // Checks if the current "file" is a sub-folder
                 if (Directory.Exists(fileName))
                 {
-
-                    // if it is a subdirectory, we will loop through the 
-                    // recursively returning strings and return those to
-                    // allow them to be outputted correctly
+                    // If it is a sub-folder, we will loop through recursively,
+                    // returning strings and allowing them to be outputted correctly.
                     foreach (string subFiles in EnumerateFilesRecursively(fileName))
                     {
                         yield return subFiles;
                     }
                 }
-
-                // if it is a normal file, we will simply call yeild return on it
                 else
                 {
+                    // If it is a normal file, we will simply call yeild return on it.
                     yield return fileName;
                 }
             }
