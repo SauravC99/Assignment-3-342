@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Data;
 
@@ -19,12 +20,7 @@ namespace FileInfo_Collector
             // Iterate through all the files in all of the directories and use the 
             // generator pattern (yield keyword) to implement the iterator.
             foreach (var file in fileList)
-            {
-                // generates a CSV string with the format of "Type, Size, Name"
-                yield return file.Extension.Substring(1) 
-                             + "," + file.Length 
-                             + "," + file.Name;
-            }
+                yield return file.FullName;
         }
 
         static string FormatByteSize(long byteSize)
@@ -32,7 +28,6 @@ namespace FileInfo_Collector
             // String list of byte size units after the numerical value.
             // Note: 1kB = 1000B
             string[] byteSizeNames = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "AB"};
-            int index = 0;
 
             // Used float instead of Decimal because the method only requires 2 siginificant digits.
             // (Decimal has a higher precision than float).
@@ -40,11 +35,9 @@ namespace FileInfo_Collector
 
             // Loop to keep dividing by 1000 while numerical value is >= 1.
             // The index keeps track of which byte size name we will need.
-            while (numberValue / 1000 >= 1)
-            {
+            int index;
+            for (index = 0; numberValue / 1000 >= 1; ++index)
                 numberValue /= 1000;
-                index++;
-            }
 
             // Parse the result as a string, the 0:n2 part will give 2 significant digits.
             return string.Format("{0:n2}{1}", numberValue, byteSizeNames[index]);
@@ -52,64 +45,60 @@ namespace FileInfo_Collector
 
         static XDocument CreateReport(IEnumerable<string> files)
         {
-            // TODO: Create a HTML document containing a table with three colums:
-            // "Type", "Count", and "Size" for the file name extension (converted
-            // to lower case),  the number of files with this type, and the total
-            // size of all files with this type, respectively.
+            // Create a HTML document containing a table with three colums:
+            // "Type": the file name extension (converted to lower case)
+            // "Count": the number of files with this type
+            // "Size": the total size of all files with this type
+            XElement xmlTable = new XElement("table", 
+                new XAttribute("border", "1"),
+                new XAttribute("style", "width:100%"),
+                new XElement("tr",
+                    new XElement("th","Type"),
+                    new XElement("th","Count"),
+                    new XElement("th","Size")
+                )
+            );
 
             // Use the System.IO.FileInfo to get the size of a file with a given path.
-            DataTable dt = new DataTable();
-            DataColumn dc1 = new DataColumn();
-            dc1.DataType = System.Type.GetType("System.String");
-            dc1.ColumnName = "Type";
-            dt.Columns.Add(dc1);
-            DataColumn dc2 = new DataColumn();
-            dc2.DataType = System.Type.GetType("System.Int32");
-            dc2.ColumnName = "Count";
-            dt.Columns.Add(dc2);
-            DataColumn dc3 = new DataColumn();
-            dc3.DataType = System.Type.GetType("System.Int64");
-            dc3.ColumnName = "Size";
-            dt.Columns.Add(dc3);
-            foreach (var v in files)
-            {
-                var f = new FileInfo(v);
-                string type = Path.GetExtension(f.ToString());
-                bool found = false;
-                foreach (DataRow d in dt.Rows)
-                {
-                    if (d["Type"].Equals(type))
-                    {
-                        d["Count"] = (int)d["Count"] + 1;
-                        d["Size"] = (long)d["Size"] + f.Length;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    DataRow dr = dt.NewRow();
-                    dr["Type"] = type;
-                    dr["Count"] = 1;
-                    dr["Size"] = f.Length;
-                    dt.Rows.Add(dr);
-                }
-            }
             // Sort the table by the byte size value of the "Size" column in descending order.
-            dt.DefaultView.Sort = "Size desc";
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                Console.WriteLine("Type: {0:G}, Count: {1:D}, Size:{2:D}", dt.Rows[i]["Type"], dt.Rows[i]["Count"], dt.Rows[i]["Size"]);
-            }
-
-
             // Use FormatByteSize to format the value printed in the "Size" column.
-
             // Implement this function using LINQ queries: group by and orderby
-
+            var rows = (files.Select(
+                        path => new FileInfo(path))
+                        ).GroupBy(file => file.Extension
+                        ).Select(f => new 
+                            {
+                                FileNameExt = f.Key,
+                                NumOfFiles = f.Count(),
+                                TotalSize = f.Sum(file => file.Length)
+                            }
+                        ).OrderByDescending(f => f.TotalSize);
+            
             // Use the System.Xml.Linq.XElement constructor to functionally
             // construct the XML document.
-            return null;
+            XElement row1 = xmlTable.Element("tr");
+            row1.AddAfterSelf(
+                from row in rows
+                let size = FormatByteSize(row.TotalSize)
+                select new XElement("tr",
+                    new XElement("td", row.FileNameExt),
+                    new XElement("td", row.NumOfFiles),
+                    new XElement("td", size)
+                )
+            );
+
+            XDocument report = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"),
+                new XDocumentType("html", null, null, null),
+                new XElement("html",
+                    new XElement("head",
+                        new XElement("title", "HTML Report")
+                    ),
+                    new XElement("body", xmlTable)
+                )
+            );
+
+            return report;
         }
 
         public static void Main(string[] args)
