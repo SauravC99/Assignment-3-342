@@ -68,7 +68,7 @@ namespace FileInfo_Collector
                         ).GroupBy(file => file.Extension
                         ).Select(f => new 
                             {
-                                FileNameExt = f.Key,
+                                FileNameExt = f.Key.Substring(1).ToLower(),
                                 NumOfFiles = f.Count(),
                                 TotalSize = f.Sum(file => file.Length)
                             }
@@ -106,21 +106,17 @@ namespace FileInfo_Collector
             // Take two command line arguments:
             // (1) A path to a folder and
             // (2) a name for a HTML report output file.
-            Console.Write("Enter a path to a folder: ");
+            Console.Write("Enter the path of the input folder: "); // <directory path>/<folder name>
             string inputFolderPath = Console.ReadLine();
-            Console.Write("Enter a name for a HTML report output file: ");
+            Console.Write("Enter the path for the HTML report output file: "); // <directory path>/Report.htm
             string outputReportPath = Console.ReadLine();
 
             // Call the function that enumerates the files within the folder.
             var folderFiles = EnumerateFilesRecursively(inputFolderPath);
-            foreach (var line in folderFiles)
-            {
-                // test the values returned from EnumerateFilesRecursively
-                Console.WriteLine($"File: {line} size: {FormatByteSize(new FileInfo(line).Length)}");
-            }
-            CreateReport(folderFiles);
-            
-            // TODO: call function to write the report
+            // Call the function to create the HTML report file.
+            var xmlReport = CreateReport(folderFiles);
+            // Save the HTML report file to the output path.
+            xmlReport.Save(outputReportPath);
         }
     }
 }
