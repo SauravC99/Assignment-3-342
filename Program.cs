@@ -38,7 +38,7 @@ namespace FileInfo_Collector
         {
             // String list of byte size units after the numerical value.
             // Note: 1kB = 1000B
-            string[] byteSizeNames = {"Bytes", "kB", "MB", "GB", "TB", "PB", "EB", "AB"};
+            string[] byteSizeNames = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "AB"};
             int index = 0;
 
             // Used float instead of Decimal because the method only requires 2 siginificant digits.
@@ -119,7 +119,7 @@ namespace FileInfo_Collector
             return null;
         }
 
-        public static int Main(string[] args)
+        public static void Main(string[] args)
         {
             // Take two command line arguments:
             // (1) A path to a folder and
@@ -133,12 +133,12 @@ namespace FileInfo_Collector
             var folderFiles = EnumerateFilesRecursively(inputFolderPath);
             foreach (var line in folderFiles)
             {
-                Console.WriteLine($"File: {line} size: {FormatByteSize(new FileInfo(line).Length)}"); // test the values returned from EnumerateFilesRecursively
+                // test the values returned from EnumerateFilesRecursively
+                Console.WriteLine($"File: {line} size: {FormatByteSize(new FileInfo(line).Length)}");
             }
             CreateReport(folderFiles);
+            
             // TODO: call function to write the report
-
-            return 0; // End of program.
         }
     }
 }
