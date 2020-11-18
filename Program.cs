@@ -10,27 +10,20 @@ namespace FileInfo_Collector
     {
         static IEnumerable<string> EnumerateFilesRecursively(string path)
         {
-            var fileEntries = Directory.EnumerateFileSystemEntries(path);
-            
-            // Iterate through all the files in the given folder 
-            // and the entire sub-folder hierarchy.
-            foreach (string fileName in fileEntries)
+            // Get a snapshot of the file system.
+            var directoryTree = new DirectoryInfo(path);
+
+            // Enumerate all files recursively including the entire sub-folder hierarchy.
+            IEnumerable<FileInfo> fileList = directoryTree.GetFiles("*.*", SearchOption.AllDirectories);
+
+            // Iterate through all the files in all of the directories and use the 
+            // generator pattern (yield keyword) to implement the iterator.
+            foreach (var file in fileList)
             {
-                // Checks if the current "file" is a sub-folder
-                if (Directory.Exists(fileName))
-                {
-                    // If it is a sub-folder, we will loop through recursively,
-                    // returning strings and allowing them to be outputted correctly.
-                    foreach (string subFiles in EnumerateFilesRecursively(fileName))
-                    {
-                        yield return subFiles;
-                    }
-                }
-                else
-                {
-                    // If it is a normal file, we will simply call yeild return on it.
-                    yield return fileName;
-                }
+                // generates a CSV string with the format of "Type, Size, Name"
+                yield return file.Extension.Substring(1) 
+                             + "," + file.Length 
+                             + "," + file.Name;
             }
         }
 
@@ -110,7 +103,7 @@ namespace FileInfo_Collector
             }
 
 
-            // Use FormatByteSize to formart the value printed in the "Size" column.
+            // Use FormatByteSize to format the value printed in the "Size" column.
 
             // Implement this function using LINQ queries: group by and orderby
 
