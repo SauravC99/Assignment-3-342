@@ -119,25 +119,13 @@ namespace FileInfo_Collector
 
         public static int Main(string[] args)
         {
-            // TODO: Call the functions above to create the report file.
-
-            // Test if the two command line arguments are supplied.
-            /*
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Please enter two command line arguments.");
-                Console.WriteLine("The first argument should be the path of the input folder and the");
-                Console.WriteLine("second argument should be the path of the HTML report output file.");
-
-                return 1;  // Exit program.
-            }
-            */
-
-            // Take two command line arguments.
-            //string inputFolderPath = "C:\\Users\\steve\\Desktop\\CECS Courses\\CECS 342";
-            string inputFolderPath = "C:\\LeetcodeProblems";
-            // Display the two values entered by the user.
-            Console.WriteLine($"Input folder path: {inputFolderPath}");
+            // Take two command line arguments:
+            // (1) A path to a folder and
+            // (2) a name for a HTML report output file.
+            Console.Write("Enter a path to a folder: ");
+            string inputFolderPath = Console.ReadLine();
+            Console.Write("Enter a name for a HTML report output file: ");
+            string outputReportPath = Console.ReadLine();
 
             // Call the function that enumerates the files within the folder.
             var folderFiles = EnumerateFilesRecursively(inputFolderPath);
